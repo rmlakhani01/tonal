@@ -1,0 +1,22 @@
+/**
+ * Module Description
+ * 
+ * Version    Date            Author           Remarks
+ * 1.00       01 Aug 2019     Frost
+ *
+ */
+
+/**
+ * @returns {Void} Any or no return value
+ */
+function get_itemName() {
+	var soId = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_itemname_soid');
+	nlapiLogExecution('DEBUG', 'soId', soId);
+	
+	var rec = nlapiLoadRecord('salesorder', soId, {recordmode : 'dynamic'});
+	
+	var itemName = rec.getLineItemText('item', 'item', 1);
+	nlapiLogExecution('DEBUG', 'itemName', itemName);
+	
+	return itemName;
+}
