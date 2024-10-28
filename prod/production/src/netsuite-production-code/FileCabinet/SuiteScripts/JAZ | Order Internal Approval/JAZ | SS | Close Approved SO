@@ -1,0 +1,35 @@
+/**
+ * Module Description
+ * 
+ * Version    Date            Author           Remarks
+ * 1.00       09 Aug 2019     User
+ *
+ */
+
+/**
+ * @param {String}
+ *            type Context Types: scheduled, ondemand, userinterface, aborted,
+ *            skipped
+ * @returns {Void}
+ */
+function closeApprovedInternalSO(type) {
+	var f = [
+			new nlobjSearchFilter('mainline', null, 'is', 'T'),
+			new nlobjSearchFilter('custbody_jaz_ordertype', null, 'anyof', [ 1,
+					2 ]),
+			new nlobjSearchFilter('status', null, 'anyof', 'SalesOrd:F') ];
+	var s = nlapiSearchRecord('salesorder', null, f);
+
+	if (s) {
+		for (var n = 0; n < s.length; n++) {
+			var rec = nlapiLoadRecord('salesorder', s[n].getId())
+
+			for (var i = 1; i <= rec.getLineItemCount('item'); i++) {
+				rec.selectLineItem('item', i);
+				rec.setCurrentLineItemValue('item', 'isclosed', 'T');
+				rec.commitLineItem('item')
+			}
+			nlapiSubmitRecord(rec)
+		}
+	}
+}

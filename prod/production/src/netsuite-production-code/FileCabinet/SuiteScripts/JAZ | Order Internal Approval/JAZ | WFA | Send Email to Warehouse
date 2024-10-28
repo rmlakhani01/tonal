@@ -1,0 +1,33 @@
+/**
+ * Module Description
+ * 
+ * Version    Date            Author           Remarks
+ * 1.00       09 Aug 2019     User
+ *
+ */
+
+/**
+ * @returns {Void} Any or no return value
+ */
+function sendEmail() {
+	var tranId = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_tranid');
+	nlapiLogExecution('DEBUG', 'tranId', tranId);
+	
+	var fNameReq = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_fnamereq');
+	var lNameReq = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_lnamereq');
+	var itemQuantity = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_quantity');
+	var itemName = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_name');
+	var deptHead = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_depthead');
+	var dhEmail = nlapiLookupField('employee', deptHead, 'email');
+	var url = nlapiResolveURL('RECORD', 'salesorder', tranId);
+	
+	var sender = nlapiGetContext().getSetting('SCRIPT', 'custscript_jaz_wfa_requester');
+	var recipient = [4001,13494];
+	var subject = 'Approved Internal Use Sales Order is waiting Fulfillment';
+	var body = 'Hello Manufacturing Team,<br><br>Finance has approved an internal use Sales order ' + tranId + ' originally requested by ' + fNameReq + ' ' + lNameReq + ' for ' + itemQuantity + 'x ' + itemName + '. Please coordinate with ' + fNameReq + ' for fulfillment and delivery instructions of the requested internal use items.<br><br>' + '<a href="' + url + '">View Sales Order</a>';
+	var cc = ['ankush.sharma@escalon.services','mike.tamaru@tonal.com','dylan@tonal.com',dhEmail];
+	var records = new Array();
+	records['transaction'] = tranId; 
+	
+	nlapiSendEmail(sender, recipient, subject, body, cc, null, records);
+}

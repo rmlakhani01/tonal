@@ -1,0 +1,19 @@
+{
+  "name": "netsuite-production-code",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "validate": "suitecloud project:deploy dryrun",
+    "deploy": "suitecloud project:deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@oracle/suitecloud-unit-testing": "^1.5.0"
+  },
+  "devDependencies": {
+    "@oracle/suitecloud-cli": "^2.0.0"
+  }
+}
